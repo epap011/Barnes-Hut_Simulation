@@ -1,4 +1,4 @@
-class Body {
+public class Particle {
     private double x;
     private double y;
     private double vx;
@@ -20,7 +20,7 @@ class Body {
     public void setMass(Double mass){this.mass = mass;}
     public void setName(String name){this.name = name;}
 
-    public Body(double x, double y, double vx, double vy, double mass, String name) {
+    public Particle(double x, double y, double vx, double vy, double mass, String name) {
     this.x    = x;
     this.y    = y;
     this.vx   = vx;

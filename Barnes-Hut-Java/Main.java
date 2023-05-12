@@ -1,9 +1,11 @@
 public class Main {
     public static void main(String[] args) {
-        BurnesHut burnesHut = new BurnesHut();
+        
+        NBodySimulation nBodySimulation = new NBodySimulation();
+        
         try {
-            burnesHut.createBodiesFromFile("test.txt");
-            burnesHut.printBodies();
+            nBodySimulation.createBurnesHutTreeFromFile("test.txt");
+            nBodySimulation.printBurnesHutTree();
         } catch (Exception e) {
             System.out.println(e);
         }
