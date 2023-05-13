@@ -6,7 +6,11 @@ public class NBodySimulation {
     private double universeSize;
     private BurnesHutTreeNode treeRootNode;
 
-    public NBodySimulation() {}
+    public NBodySimulation() {
+        Particle god = new Particle(0, 0, 0, 0, 0, "God");
+        this.treeRootNode = new BurnesHutTreeNode(god);
+        this.universeSize = 0;
+    }
 
     public void createBurnesHutTreeFromFile(String fileName) throws Exception {
         File file;
@@ -34,18 +38,40 @@ public class NBodySimulation {
             String name = data[5];
 
             Particle particle = new Particle(x, y, vx, vy, mass, name);
+            
+            if(treeRootNode == NULL) treeRootNode = new BurnesHutTreeNode(particle, universeSize/2, universeSize/2, universeSize, universeSize);
+            treeRootNode.insertParticle(particle);
         }
     }
 }
 
 class BurnesHutTreeNode {
     private Particle particle;
-    private ArrayList<BurnesHutNode> children;
+    private BurnesHutTreeNode NW, NE, SW, SE;
+    private double centerX, centerY;
+    private double height, width;
     private double centerOfMass;
+    private double totalMass;
 
-    public BurnesHutNode(Particle particle) {
+    public BurnesHutNode(Particle particle, double centerX, double centerY, double height, double width) {
         this.particle = particle;
-        this.children = new ArrayList<BurnesHutNode>(4);
-        centerOfMass  = -1;
+        
+        this.NW = null; this.NE = null; 
+        this.SW = null; this.SE = null;
+        
+        this.centerOfMass = 0;
+        this.totalMass    = 0;
+        this.height  = height;
+        this.width   = width;
+        this.centerX = centerX;
+        this.centerY = centerY;
+    }
+
+    public void insertParticle(Particle particle) {
+        
+    }
+
+    private boolean isParticleFarAway(Particle particle, BurnesHutTreeNode node) {
+        
     }
 }
