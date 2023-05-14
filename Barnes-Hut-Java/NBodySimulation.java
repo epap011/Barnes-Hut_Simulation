@@ -3,14 +3,11 @@ import java.io.File;
 import java.util.Scanner;
 
 public class NBodySimulation {
+    private int numberOfParticles;
     private double universeSize;
-    private BurnesHutTreeNode treeRootNode;
+    private BHTreeNode treeRootNode;
 
-    public NBodySimulation() {
-        Particle god = new Particle(0, 0, 0, 0, 0, "God");
-        this.treeRootNode = new BurnesHutTreeNode(god);
-        this.universeSize = 0;
-    }
+    public NBodySimulation() { }
 
     public void createBurnesHutTreeFromFile(String fileName) throws Exception {
         File file;
@@ -23,8 +20,9 @@ public class NBodySimulation {
             throw new Exception("File not found");
         }
 
-        int numberOfParticles = Integer.parseInt(reader.nextLine());
-        int universeSize      = Integer.parseInt(reader.nextLine());
+        this.numberOfParticles = Integer.parseInt(reader.nextLine());
+        this.universeSize      = Integer.parseInt(reader.nextLine());
+        this.treeRootNode      = new BHTreeNode(new Quad(0, 0, this.universeSize));
 
         while (reader.hasNextLine()) {
             String line   = reader.nextLine();
@@ -38,40 +36,56 @@ public class NBodySimulation {
             String name = data[5];
 
             Particle particle = new Particle(x, y, vx, vy, mass, name);
-            
-            if(treeRootNode == NULL) treeRootNode = new BurnesHutTreeNode(particle, universeSize/2, universeSize/2, universeSize, universeSize);
             treeRootNode.insertParticle(particle);
         }
     }
 }
 
-class BurnesHutTreeNode {
+class BHTreeNode {
     private Particle particle;
-    private BurnesHutTreeNode NW, NE, SW, SE;
-    private double centerX, centerY;
-    private double height, width;
-    private double centerOfMass;
-    private double totalMass;
+    private Quad quad;
+    private BHTreeNode NW, NE, SW, SE;
 
-    public BurnesHutNode(Particle particle, double centerX, double centerY, double height, double width) {
-        this.particle = particle;
-        
+    public BHTreeNode(double centerX, double centerY, double length) {   
         this.NW = null; this.NE = null; 
         this.SW = null; this.SE = null;
         
-        this.centerOfMass = 0;
-        this.totalMass    = 0;
-        this.height  = height;
-        this.width   = width;
         this.centerX = centerX;
         this.centerY = centerY;
+        this.length  = length;
     }
 
     public void insertParticle(Particle particle) {
-        
+
+        // If this node does not contain a particle, put the new particle here. 
+        if(this.particle == null) {
+            this.particle = particle;
+            return;
+        }
+
+        //If this node is an internal node, update it's center-of-mass and total mass. 
+        //Recursively insert the new particle b in the appropriate quadrant. 
+        if(!isExternalNode()) {
+
+        }
+
+        else {
+            
+        }
     }
 
-    private boolean isParticleFarAway(Particle particle, BurnesHutTreeNode node) {
-        
+    private boolean isExternalNode() {
+        return (NW == null && NE == null && SW == null && SE == null);
+    }
+}
+
+class Quad {
+    private double centerX, centerY;
+    private double length;
+
+    public Quad(double xmid, double ymid, double length) {
+        this.centerX = xmid;
+        this.centerY = ymid;
+        this.length  = length;
     }
 }
