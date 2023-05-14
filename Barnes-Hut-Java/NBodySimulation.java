@@ -46,13 +46,11 @@ class BHTreeNode {
     private Quad quad;
     private BHTreeNode NW, NE, SW, SE;
 
-    public BHTreeNode(double centerX, double centerY, double length) {   
+    public BHTreeNode(Quad quad) {   
         this.NW = null; this.NE = null; 
         this.SW = null; this.SE = null;
         
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.length  = length;
+        this.quad = quad;
     }
 
     public void insertParticle(Particle particle) {
