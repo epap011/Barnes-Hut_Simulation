@@ -64,16 +64,43 @@ class BHTreeNode {
         //If this node is an internal node, update it's center-of-mass and total mass. 
         //Recursively insert the new particle b in the appropriate quadrant. 
         if(!isExternalNode()) {
-
+            findAppropriateQuadForParticle(particle);
         }
 
         else {
-            
+            double centerX = this.getQuad().getCenterX();
+            double centerY = this.getQuad().getCenterY();
+            double length  = this.getQuad().getLength();
+
+            NW = new BHTreeNode(new Quad(centerX - length/4, centerY + length/4, length/2));
+            NE = new BHTreeNode(new Quad(centerX + length/4, centerY + length/4, length/2));
+            SW = new BHTreeNode(new Quad(centerX - length/4, centerY - length/4, length/2));
+            SE = new BHTreeNode(new Quad(centerX + length/4, centerY - length/4, length/2));
+
+            findAppropriateQuadForParticle(this.particle);
+            findAppropriateQuadForParticle(particle);
         }
+    }
+
+    public void findAppropriateQuadForParticle(Particle particle) {
+        double x = particle.getX();
+        double y = particle.getY();
+
+        if(NW.getQuad().containsPoint(x, y)) NW.insertParticle(particle);
+        else 
+        if(NE.getQuad().containsPoint(x, y)) NE.insertParticle(particle);
+        else 
+        if(SW.getQuad().containsPoint(x, y)) SW.insertParticle(particle);
+        else 
+        if(SE.getQuad().containsPoint(x, y)) SE.insertParticle(particle);
     }
 
     private boolean isExternalNode() {
         return (NW == null && NE == null && SW == null && SE == null);
+    }
+
+    public Quad getQuad() {
+        return this.quad;
     }
 }
 
@@ -86,4 +113,17 @@ class Quad {
         this.centerY = ymid;
         this.length  = length;
     }
+
+    public boolean containsPoint(double x, double y) {
+        return (x >= this.centerX - this.length/2 && 
+                x <= this.centerX + this.length/2 && 
+                y >= this.centerY - this.length/2 && 
+                y <= this.centerY + this.length/2);   
+    }
+
+    public double getCenterX() {return this.centerX;}
+
+    public double getCenterY() {return this.centerY;}
+
+    public double getLength()  {return this.length;}
 }

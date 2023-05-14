@@ -5,7 +5,6 @@ public class Main {
         
         try {
             nBodySimulation.createBurnesHutTreeFromFile("test.txt");
-            nBodySimulation.printBurnesHutTree();
         } catch (Exception e) {
             System.out.println(e);
         }
