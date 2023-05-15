@@ -64,6 +64,10 @@ class BHTreeNode {
         //If this node is an internal node, update it's center-of-mass and total mass. 
         //Recursively insert the new particle b in the appropriate quadrant. 
         if(!isExternalNode()) {
+            // Update center-of-mass and total mass.
+            this.particle.setX((this.particle.getX() * this.particle.getMass() + particle.getX() * particle.getMass()) / (this.particle.getMass() + particle.getMass()));
+            this.particle.setY((this.particle.getY() * this.particle.getMass() + particle.getY() * particle.getMass()) / (this.particle.getMass() + particle.getMass()));
+            this.particle.setMass(this.particle.getMass() + particle.getMass());
             findAppropriateQuadForParticle(particle);
         }
 
