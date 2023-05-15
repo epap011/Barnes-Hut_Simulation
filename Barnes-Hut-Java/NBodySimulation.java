@@ -6,6 +6,7 @@ public class NBodySimulation {
     private int numberOfParticles;
     private double universeSize;
     private BHTreeNode treeRootNode;
+    private ArrayList<Particle> particles;
 
     public NBodySimulation() { }
 
@@ -23,6 +24,7 @@ public class NBodySimulation {
         this.numberOfParticles = Integer.parseInt(reader.nextLine());
         this.universeSize      = Integer.parseInt(reader.nextLine());
         this.treeRootNode      = new BHTreeNode(new Quad(0, 0, this.universeSize));
+        this.particles         = new ArrayList<Particle>();
 
         while (reader.hasNextLine()) {
             String line   = reader.nextLine();
@@ -36,7 +38,12 @@ public class NBodySimulation {
             String name = data[5];
 
             Particle particle = new Particle(x, y, vx, vy, mass, name);
+            particles.add(particle);
             treeRootNode.insertParticle(particle);
+        }
+
+        for (Particle particle : particles) {
+            treeRootNode.updateNetForce(particle);
         }
     }
 }
@@ -83,6 +90,28 @@ class BHTreeNode {
 
             findAppropriateQuadForParticle(this.particle);
             findAppropriateQuadForParticle(particle);
+        }
+    }
+
+    public void updateNetForce(Particle particle) {
+
+        if(this.particle == particle) return;
+
+        if(isExternalNode()) this.particle.applyForce(particle);
+
+        else {
+            double s = this.getQuad().getLength();
+            double d = this.particle.distanceToParticle(particle);
+            double ratio = s/d;
+            if(ratio < 0.5) {
+                particle.applyForce(this.particle);
+            }
+            else {
+                NW.updateNetForce(particle);
+                NE.updateNetForce(particle);
+                SW.updateNetForce(particle);
+                SE.updateNetForce(particle);
+            }
         }
     }
 
