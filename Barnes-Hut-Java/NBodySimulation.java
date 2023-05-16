@@ -72,7 +72,7 @@ public class NBodySimulation {
 
     public void printParticle() {
         for (Particle particle : particles) {
-            System.out.println(particle.getX() + " " + particle.getY() + " " + particle.getVx() + " " + particle.getVy() + " " + particle.getMass() +);
+            System.out.println(particle.getX() + " " + particle.getY() + " " + particle.getVx() + " " + particle.getVy() + " " + particle.getMass());
         }
     }
 }
