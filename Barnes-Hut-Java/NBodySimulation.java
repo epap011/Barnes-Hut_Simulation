@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Scanner;
+import java.io.FileWriter;
 
 public class NBodySimulation {
     private int numberOfParticles;
@@ -22,14 +23,15 @@ public class NBodySimulation {
         }
 
         this.numberOfParticles = Integer.parseInt(reader.nextLine());
-        this.universeSize      = Integer.parseInt(reader.nextLine());
-        this.treeRootNode      = new BHTreeNode(new Quad(0, 0, this.universeSize));
+        this.universeSize      = Double.parseDouble(reader.nextLine());
         this.particles         = new ArrayList<Particle>();
 
         while (reader.hasNextLine()) {
             String line   = reader.nextLine();
             String[] data = line.split(" ");
-            
+
+            if(line.equals("")) break;
+
             double x    = Double.parseDouble(data[0]);
             double y    = Double.parseDouble(data[1]);
             double vx   = Double.parseDouble(data[2]);
@@ -39,11 +41,38 @@ public class NBodySimulation {
 
             Particle particle = new Particle(x, y, vx, vy, mass, name);
             particles.add(particle);
+        }
+    }
+
+    public void simulate(double dt) {
+        this.treeRootNode = new BHTreeNode(new Quad(0, 0, this.universeSize));
+        for (Particle particle : particles) {
             treeRootNode.insertParticle(particle);
         }
 
         for (Particle particle : particles) {
             treeRootNode.updateNetForce(particle);
+            particle.updatePositionAndVelocity(dt);
+        }
+    }
+
+    public void printParticlesToFile(String fileName) throws Exception {
+        try {
+            FileWriter myWriter = new FileWriter(fileName);
+            myWriter.write(this.numberOfParticles + "\n");
+            myWriter.write(this.universeSize + "\n");
+            for (Particle particle : particles) {
+                myWriter.write(particle.getX() + " " + particle.getY() + " " + particle.getVx() + " " + particle.getVy() + " " + particle.getMass() + " " + particle.getName() + "\n");
+            }
+            myWriter.close();
+        } catch (Exception e) {
+            throw new Exception("File not found");
+        }
+    }
+
+    public void printParticle() {
+        for (Particle particle : particles) {
+            System.out.println(particle.getX() + " " + particle.getY() + " " + particle.getVx() + " " + particle.getVy() + " " + particle.getMass() +);
         }
     }
 }
@@ -95,7 +124,7 @@ class BHTreeNode {
 
     public void updateNetForce(Particle particle) {
 
-        if(this.particle == particle) return;
+        if(this.particle == null || this.particle == particle) return;
 
         if(isExternalNode()) this.particle.applyForce(particle);
 
